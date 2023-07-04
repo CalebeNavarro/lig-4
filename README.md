@@ -9,6 +9,11 @@
 Projeto desenvolvido em grupo no primeiro trimestre da Kenzie Academy Brasil, com o objetivo de praticar hard e soft skills. O jogo lig-4 exige que o jogador complete uma sequência de quatro em qualquer direção (horizontal, vertical ou diagonal) para vencer, caso todas as células sejam preenchidas, o jogo termina com empate. Adicionamos uma feature de perder a vez de jogar, com a adição de um cronômetro com contagem regressiva de 15 segundos, caso a jogada não seja realizada dentro desse tempo, o jogador perde a vez.\
 O tema da aplicação é baseado do anime Naruto, mas conta também com referências à Kenzie, pois o Hogake da vila é o facilitador de ensino Howard. Leia a história de Howard Village no menu "Sobre a vila". O jogo também possui um easter egg que os fãs de Naruto vão amar! Tente descobrir sem olhar o código 😄
 
+## Rodando localmente
+Há duas opções.
+- ```git clone git@github.com:CalebeNavarro/lig-4.git``` depois execute o arquivo index.html
+- Caso tenha docker compose, apenas rode o comando ```docker compose up --build``` e acesse http://localhost:8080/
+
 ## Tecnologias
 As seguintes ferramentas foram utilizadas na construção do projeto:
 

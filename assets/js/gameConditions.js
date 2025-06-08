@@ -1,24 +1,41 @@
 let savePositions = [];
 
-const gameConditions = gamePlay => {
-    let edgeX = gamePlay[0].length - 3; //7-3=4
-    let edgeY = gamePlay.length - 3; //6-3=3
-    
-    gamePlay.forEach((row, indexRow) => {
+// Função para exibir o popup de fim de jogo
+const gameConditions = (gamePlay) => {
+  const maxRowCheck = gamePlay.length - 3; // 6 - 3 = 3
+  const maxColCheck = gamePlay[0].length - 3; // 7 - 3 = 4
 
-        row.forEach((cell, indexCol) => {
+  gamePlay.forEach((row, rowIndex) => {
+    row.forEach((cell, colIndex) => {
+      const victories = [
+        verticalCondition(gamePlay, maxRowCheck, rowIndex, cell, colIndex),
+        horizontalCondition(gamePlay, maxColCheck, rowIndex, cell, colIndex),
+        diagonalDownRightCondition(
+          gamePlay,
+          maxColCheck,
+          maxRowCheck,
+          rowIndex,
+          cell,
+          colIndex
+        ),
+        diagonalDownLeftCondition(
+          gamePlay,
+          maxColCheck,
+          maxRowCheck,
+          rowIndex,
+          cell,
+          colIndex
+        ),
+      ];
 
-            let victory1 = verticalCondition(gamePlay, edgeY, indexRow, cell, indexCol);
-            let victory2 = horizontalCondition(gamePlay, edgeX, indexRow, cell, indexCol);
-            let victory3 = diagonalDownRightCondition(gamePlay, edgeX, edgeY, indexRow, cell, indexCol);
-            let victory4 = diagonalDownLeftCondition(gamePlay, edgeX, edgeY, indexRow, cell, indexCol);
+      const hasVictory = victories.some((v) => v);
 
-            if (victory1 || victory2 || victory3 || victory4) {
-                showEndGamePopUp(cell);
-                columns.forEach((current) => {
-                    current.removeEventListener('click', mainGame);
-                });
-            }
-        });
+      if (hasVictory) {
+        showEndGamePopUp(cell);
+        columns.forEach((column) =>
+          column.removeEventListener("click", mainGame)
+        );
+      }
     });
+  });
 };

@@ -1,23 +1,24 @@
 const timer = document.getElementById("timer");
 let timeID;
 
-const setTimer = (counter) => {
+const setTimer = (counter = 15) => {
+  // Atualiza o display do timer
+  timer.innerHTML = `${counter}`;
 
-    timeID = setTimeout(() => {
-        timer.innerHTML = `${counter}`;
-        counter--;
-        setTimer(counter);
+  if (counter === 0) {
+    // Tempo esgotou, troca jogador e reinicia o timer
+    currentPlayer = changePlayer(currentPlayer);
+    clearTimeout(timeID);
+    counter = 15;
+    setTimeout(() => {
+      changeTurn();
     }, 1000);
+  } else {
+    // Continua a contagem regressiva a cada 1 segundo
+    timeID = setTimeout(() => {
+      setTimer(counter - 1);
+    }, 1000);
+  }
 
-    if (counter === 0) {
-        currentPlayer = changePlayer(currentPlayer);
-        clearTimeout(timeID);
-        counter = 15;
-        setTimer(counter);
-        setTimeout(() => {
-            changeTurn();
-        }, 1000);
-    }
-
-    return timeID;
+  return timeID;
 };

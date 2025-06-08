@@ -1,82 +1,91 @@
+// Seleciona todas as colunas do jogo
 const columns = document.querySelectorAll(".col");
+
+// Armazena posições de sequência vencedora (global)
 let positions = [];
 
-let currentPlayer = 'player1';
+// Estado atual do jogo
+let currentPlayer = "player1";
 let playCount = 0;
 let gamePlay = [
-    [0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0]
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
 ];
 
-const isColNotFull = (node) => node.firstElementChild.childElementCount === 0;
+// Verifica se a coluna possui espaço para inserir bola
+const isColNotFull = (colNode) =>
+  colNode.firstElementChild.childElementCount === 0;
 
-const makeBall = (currentPlayer) => {
-    const ball = document.createElement('div');
-    ball.classList.add('ball', currentPlayer);
-    return ball;
+// Cria elemento visual da bola do jogador atual
+const makeBall = (player) => {
+  const ball = document.createElement("div");
+  ball.classList.add("ball", player);
+  return ball;
 };
 
-const insertBallRowPosition = (colChildArray, currentPlayer) => {
-    let rowPosition = 0;
-    const ball = makeBall(currentPlayer);
-    playSound(dropSounds[currentPlayer]);
+// Insere bola na primeira célula vazia da coluna e retorna a posição da linha
+const insertBallRowPosition = (colCells, player) => {
+  let rowPosition = 0;
+  const ball = makeBall(player);
+  playSound(dropSounds[player]); // toca som da jogada
 
-    colChildArray.forEach((cell, index) => {
-        if (cell.childElementCount === 0) {
-            cell.appendChild(ball);
-            rowPosition = index;
-        }
-    });
-
-    return rowPosition;
-};
-
-const updateGamePlay = (gamePlay, currentPlayer, rowPosition, colPosition) => {
-
-    if (currentPlayer === "player1") {
-        gamePlay[rowPosition][colPosition - 1] = 1;
-    } else {
-        gamePlay[rowPosition][colPosition - 1] = 2;
+  colCells.forEach((cell, index) => {
+    if (cell.childElementCount === 0) {
+      cell.appendChild(ball);
+      rowPosition = index;
     }
+  });
 
-    return gamePlay;
+  return rowPosition;
 };
 
+// Atualiza a matriz do jogo com a jogada atual
+const updateGamePlay = (gamePlayMatrix, player, rowPos, colPos) => {
+  const colIndex = colPos - 1;
 
-const changePlayer = (currentPlayer) => {
-    if (currentPlayer === 'player1') {
-        currentPlayer = 'player2';
-    } else {
-        currentPlayer = 'player1';
-    }
+  gamePlayMatrix[rowPos][colIndex] = player === "player1" ? 1 : 2;
 
-    return currentPlayer;
+  return gamePlayMatrix;
 };
 
-const mainGame = (e) => {
-    let col = e.currentTarget;
-    let colChildArray = Array.from(col.children);
-    let colPosition = col.dataset.column;
-    
-    if(isColNotFull(col)) {
-        let rowPosition = insertBallRowPosition(colChildArray, currentPlayer);
-        gamePlay = updateGamePlay(gamePlay, currentPlayer, rowPosition, colPosition);
-        gameConditions(gamePlay);
-        playCount = gameDraw(playCount);
-        currentPlayer = changePlayer(currentPlayer);
-
-        clearTimeout(timeID);
-        setTimer(15);
-        setTimeout(() => {
-            changeTurn();
-        }, 1000);
-    }
+// Alterna o jogador atual
+const changePlayer = (player) => {
+  return player === "player1" ? "player2" : "player1";
 };
 
-columns.forEach((current) => {
-    current.addEventListener('click', mainGame);
+// Função principal disparada ao clicar em uma coluna
+const mainGame = (event) => {
+  const col = event.currentTarget;
+  const colCellsArray = Array.from(col.children);
+  const colPosition = Number(col.dataset.column);
+
+  if (isColNotFull(col)) {
+    const rowPosition = insertBallRowPosition(colCellsArray, currentPlayer);
+    gamePlay = updateGamePlay(
+      gamePlay,
+      currentPlayer,
+      rowPosition,
+      colPosition
+    );
+
+    gameConditions(gamePlay); // Verifica condições de vitória
+    playCount = gameDraw(playCount); // Verifica empate
+    currentPlayer = changePlayer(currentPlayer); // Troca jogador
+
+    clearTimeout(timeID);
+    setTimer(15); // Reseta timer
+
+    setTimeout(() => {
+      changeTurn(); // Lógica de mudança de turno (visual ou outra)
+    }, 1000);
+  }
+};
+
+// Adiciona evento de clique em todas as colunas
+columns.forEach((column) => {
+  column.addEventListener("click", mainGame);
 });

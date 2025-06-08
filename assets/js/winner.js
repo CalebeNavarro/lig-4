@@ -1,21 +1,26 @@
 const endGamePopUp = document.getElementById("endGamePopUp");
 
 const showEndGamePopUp = (cell) => {
-    const playersName = getPlayersName();
-    result.innerText = 'venceu e deixou a vila!';
-    howard.src = '../assets/img/sadHoward.png';
+  const playersName = getPlayersName();
 
-    if (cell === 1) {
-        winner.innerText = `${playersName[1]} `;
-    } else {
-        winner.innerText = `${playersName[2]} `;
-    }
+  // Atualiza mensagem e imagem do Howard para fim de jogo
+  result.innerText = "venceu e deixou a vila!";
+  howard.src = "../assets/img/sadHoward.png";
 
-    endGamePopUp.classList.remove('showUp');
-    winAnimation();
-    endGamePopUp.classList.add('showUp');
+  // Define o nome do vencedor
+  if (cell === 1) {
+    winner.innerText = `${playersName[1]} `;
+  } else {
+    winner.innerText = `${playersName[2]} `;
+  }
 
-    setTimeout(() => {
-        endGamePopUp.classList.remove("hidden");
-    }, 5000);
+  // Controla animação do popup
+  endGamePopUp.classList.remove("showUp");
+  winAnimation();
+  endGamePopUp.classList.add("showUp");
+
+  // Após 5 segundos, remove a classe 'hidden' para exibir o popup
+  setTimeout(() => {
+    endGamePopUp.classList.remove("hidden");
+  }, 5000);
 };
